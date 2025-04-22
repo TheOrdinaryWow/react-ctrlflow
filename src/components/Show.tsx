@@ -1,9 +1,25 @@
 import { Fragment, type ReactElement, type ReactNode } from "react";
 
+/**
+ * Props for the Show component.
+ */
 type ShowProps<T> = {
+  /**
+   * The value to check for truthiness. If truthy, the `children` will be rendered.
+   */
   when: NonNullable<T> | undefined | null | false;
+  /**
+   * Whether to use a key based on the `when` prop. If true, the component will be recreated when `when` changes.
+   */
   keyed?: boolean;
+  /**
+   * The fallback element to render if `when` is falsy.
+   */
   fallback?: ReactElement;
+  /**
+   * The children to render if `when` is truthy. Can be a ReactNode or a function that returns a ReactNode.
+   * If it's a function, it will be passed the `when` value as an argument.
+   */
   children: ReactNode | ((item: T) => ReactNode);
 };
 

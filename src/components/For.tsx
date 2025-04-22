@@ -2,10 +2,25 @@ import { Fragment, type ReactElement, type ReactNode } from "react";
 
 import { generateStableKey } from "../lib/utils";
 
+/**
+ * Props for the {@link For} component.
+ */
 export type ForProps<T extends readonly unknown[], U extends ReactNode> = {
+  /**
+   * The array to iterate over. If this is null, undefined, or an empty array, the fallback will be rendered.
+   */
   each: NonNullable<T> | undefined | null | false;
+  /**
+   * A React element to render if the `each` array is empty.
+   */
   fallback?: ReactElement;
+  /**
+   * A function that returns a unique key for each item in the array. If not provided, a stable key will be generated.
+   */
   getKey?: (item: T[number], index: number) => string | number;
+  /**
+   * A function that renders a ReactNode for each item in the array.
+   */
   children: (item: T[number], index: number) => U;
 };
 

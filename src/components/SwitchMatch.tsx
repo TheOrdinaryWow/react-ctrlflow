@@ -2,20 +2,37 @@ import { Children, Fragment, type ReactElement, type ReactNode, cloneElement, is
 
 type SwitchProps = {
   /**
-   * @deprecated Use `<Fallback>` instead.
+   * @deprecated Use `Fallback` instead.
    * This prop is retained for backward compatibility, and will be removed in a future version.
+   *
+   * The fallback element to render if `when` is falsy.
    */
   fallback?: ReactElement;
+  /**
+   * The children of the `Switch` component. Should be `Match` and `Fallback` components.
+   */
   children: ReactNode;
 };
 
 type MatchProps<T> = {
+  /**
+   * The condition to match on. If this is truthy, the `children` will be rendered.
+   */
   when: NonNullable<T> | undefined | null | false;
+  /**
+   * Whether or not to use a key when rendering the `children`. This is useful when the `when` prop is an object.
+   */
   keyed?: boolean;
+  /**
+   * The content to render if the `when` prop is truthy. Can be a ReactNode or a function that returns a ReactNode.
+   */
   children: ReactNode | ((item: T) => ReactNode);
 };
 
 type FallbackProps = {
+  /**
+   * The content to render if no `Match` components match.
+   */
   children: ReactNode;
 };
 
