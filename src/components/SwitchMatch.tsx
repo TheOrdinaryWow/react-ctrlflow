@@ -1,6 +1,10 @@
 import { Children, Fragment, type ReactElement, type ReactNode, cloneElement, isValidElement } from "react";
 
 type SwitchProps = {
+  /**
+   * @deprecated Use `<Fallback>` instead.
+   * This prop is retained for backward compatibility, and will be removed in a future version.
+   */
   fallback?: ReactElement;
   children: ReactNode;
 };
@@ -9,6 +13,10 @@ type MatchProps<T> = {
   when: NonNullable<T> | undefined | null | false;
   keyed?: boolean;
   children: ReactNode | ((item: T) => ReactNode);
+};
+
+type FallbackProps = {
+  children: ReactNode;
 };
 
 /**
@@ -32,10 +40,19 @@ export function Switch({ fallback, children }: SwitchProps): ReactNode {
     element: ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }>;
   }[] = [];
 
+  let fallbackElement: ReactElement | undefined;
+
   Children.forEach(children, (child) => {
-    if (isValidElement<MatchProps<unknown>>(child) && child.type === Match) {
-      const when = child.props.when;
-      matchElements.push({ when, element: child as ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }> });
+    if (isValidElement(child)) {
+      if (child.type === Match) {
+        const when = (child.props as MatchProps<unknown>).when;
+        matchElements.push({
+          when,
+          element: child as ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }>,
+        });
+      } else if (child.type === Fallback) {
+        fallbackElement = child;
+      }
     }
   });
 
@@ -49,7 +66,7 @@ export function Switch({ fallback, children }: SwitchProps): ReactNode {
     });
   }
 
-  return fallback || null;
+  return fallbackElement || fallback || null;
 }
 
 /**
@@ -86,8 +103,22 @@ export function Match<T>({
       return <>{when ? renderFn(when as T) : null}</>;
     }
 
-    return <>{children}</>;
+    return children;
   }
 
   return null;
+}
+
+/**
+ * Fallback content to display when no Match condition is true inside a `<Switch>`
+ *
+ * @example
+ * ```tsx
+ * <Fallback>
+ *   <FourOhFour />
+ * </Fallback>
+ * ```
+ */
+export function Fallback({ children }: FallbackProps): ReactNode {
+  return children;
 }
