@@ -1,7 +1,12 @@
 import { Children, Fragment, type ReactElement, type ReactNode, cloneElement, isValidElement } from "react";
 
+type SwitchProps = {
+  fallback?: ReactElement;
+  children: ReactNode;
+};
+
 type MatchProps<T> = {
-  when: T | undefined | null | false;
+  when: NonNullable<T> | undefined | null | false;
   keyed?: boolean;
   children: ReactNode | ((item: T) => ReactNode);
 };
@@ -21,17 +26,11 @@ type MatchProps<T> = {
  * </Switch>
  * ```
  */
-export function Switch({
-  fallback,
-  children,
-}: {
-  fallback?: ReactNode;
-  children: ReactNode;
-}): ReactNode {
-  const matchElements: Array<{
+export function Switch({ fallback, children }: SwitchProps): ReactNode {
+  const matchElements: {
     when: unknown;
     element: ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }>;
-  }> = [];
+  }[] = [];
 
   Children.forEach(children, (child) => {
     if (isValidElement<MatchProps<unknown>>(child) && child.type === Match) {
@@ -50,7 +49,6 @@ export function Switch({
     });
   }
 
-  // If no match found, return fallback
   return fallback || null;
 }
 
@@ -75,7 +73,7 @@ export function Match<T>({
   keyed = false,
   children,
   __ignoreContext = false,
-}: MatchProps<T> & { __ignoreContext?: boolean }): ReactElement | null {
+}: MatchProps<T> & { __ignoreContext?: boolean }): ReactNode | null {
   if (__ignoreContext || when) {
     if (typeof children === "function") {
       const renderFn = children as (item: T) => ReactNode;

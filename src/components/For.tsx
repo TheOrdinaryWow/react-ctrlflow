@@ -1,7 +1,7 @@
-import { Fragment, type ReactElement, type ReactNode, useMemo } from "react";
+import { Fragment, type ReactElement, type ReactNode } from "react";
 
-export type ForProps<T extends readonly unknown[], U extends ReactElement> = {
-  each: T | undefined | null | false;
+export type ForProps<T extends readonly unknown[], U extends ReactNode> = {
+  each: NonNullable<T> | undefined | null | false;
   fallback?: ReactElement;
   getKey?: (item: T[number], index: number) => string | number;
   children: (item: T[number], index: number) => U;
@@ -17,20 +17,18 @@ export type ForProps<T extends readonly unknown[], U extends ReactElement> = {
  * </For>
  * ```
  */
-export function For<T extends readonly unknown[], U extends ReactElement>({
+export function For<T extends readonly unknown[], U extends ReactNode>({
   each,
   fallback,
   getKey,
   children,
 }: ForProps<T, U>): ReactNode {
-  return useMemo(() => {
-    if (!each || each.length === 0) {
-      return fallback || null;
-    }
+  if (!each || each.length === 0) {
+    return fallback || null;
+  }
 
-    return each.map((item, index) => {
-      const key = getKey ? getKey(item, index) : generateStableKey(item, index);
-      return <Fragment key={key}>{children(item, index)}</Fragment>;
-    });
-  }, [each, fallback, getKey, children]);
+  return each.map((item, index) => {
+    const key = getKey ? getKey(item, index) : generateStableKey(item, index);
+    return <Fragment key={key}>{children(item, index)}</Fragment>;
+  });
 }

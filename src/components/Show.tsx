@@ -1,9 +1,9 @@
-import { Fragment, type ReactNode } from "react";
+import { Fragment, type ReactElement, type ReactNode } from "react";
 
 type ShowProps<T> = {
   when: NonNullable<T> | undefined | null | false;
   keyed?: boolean;
-  fallback?: ReactNode;
+  fallback?: ReactElement;
   children: ReactNode | ((item: T) => ReactNode);
 };
 
