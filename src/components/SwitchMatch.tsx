@@ -6,11 +6,6 @@ type MatchProps<T> = {
   children: ReactNode | ((item: T) => ReactNode);
 };
 
-interface MatchElement extends ReactElement {
-  props: MatchProps<unknown> & { __ignoreContext?: boolean };
-  type: typeof Match;
-}
-
 /**
  * Switches between content based on mutually exclusive conditions
  *
@@ -35,13 +30,13 @@ export function Switch({
 }): ReactNode {
   const matchElements: Array<{
     when: unknown;
-    element: ReactElement;
+    element: ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }>;
   }> = [];
 
   Children.forEach(children, (child) => {
-    if (isValidElement(child) && child.type === Match) {
-      const { when } = child.props;
-      matchElements.push({ when, element: child });
+    if (isValidElement<MatchProps<unknown>>(child) && child.type === Match) {
+      const when = child.props.when;
+      matchElements.push({ when, element: child as ReactElement<MatchProps<unknown> & { __ignoreContext?: boolean }> });
     }
   });
 
@@ -51,7 +46,7 @@ export function Switch({
     const { element } = firstMatch;
     return cloneElement(element, {
       __ignoreContext: true,
-      ...element.props,
+      ...(element.props as object),
     });
   }
 

@@ -1,8 +1,8 @@
-import { Fragment, type JSX, type ReactNode, useMemo } from "react";
+import { Fragment, type ReactElement, type ReactNode, useMemo } from "react";
 
-export type ForProps<T extends readonly unknown[], U extends JSX.Element> = {
+export type ForProps<T extends readonly unknown[], U extends ReactElement> = {
   each: T | undefined | null | false;
-  fallback?: JSX.Element;
+  fallback?: ReactElement;
   getKey?: (item: T[number], index: number) => string | number;
   children: (item: T[number], index: number) => U;
 };
@@ -17,7 +17,7 @@ export type ForProps<T extends readonly unknown[], U extends JSX.Element> = {
  * </For>
  * ```
  */
-export function For<T extends readonly unknown[], U extends JSX.Element>({
+export function For<T extends readonly unknown[], U extends ReactElement>({
   each,
   fallback,
   getKey,
