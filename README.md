@@ -18,7 +18,7 @@ bun add react-ctrlflow
 
 ## Components
 
-### For
+### &lt;For&gt;
 
 ```tsx
 import { For } from 'react-ctrlflow';
@@ -51,7 +51,7 @@ The optional second argument is an index signal:
 </For>
 ```
 
-### <Show>
+### &lt;Show&gt;
 
 ```tsx
 type ShowProps<T> = {
@@ -80,7 +80,7 @@ Show can also be used as a way of keying blocks to a specific data model. Ex the
 </Show>
 ```
 
-### <Switch>/<Match>
+### &lt;Switch&gt;/&lt;Match&gt;
 
 Used to match multiple conditions and render the first matching component. This will return the first matching component.
 
