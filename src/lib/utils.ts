@@ -6,7 +6,7 @@
  * @param index - The index of the item in the list (used as fallback)
  * @returns A string key that's stable across renders for the same item
  */
-function generateStableKey(item: unknown, index: number): string {
+export function generateStableKey(item: unknown, index: number): string {
   if (typeof item === "string" || typeof item === "number" || typeof item === "boolean") {
     return `${typeof item}-${item}-${index}`;
   }
