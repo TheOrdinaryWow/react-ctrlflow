@@ -23,14 +23,14 @@ bun add react-ctrlflow
 ```tsx
 import { For } from 'react-ctrlflow';
 
-type ForProps<T extends readonly unknown[], U extends JSX.Element> = {
+type ForProps<T extends readonly unknown[], U extends ReactElement> = {
   each: T | undefined | null | false;
-  fallback?: JSX.Element;
+  fallback?: ReactElement;
   getKey?: (item: T[number], index: number) => string | number;
   children: (item: T[number], index: number) => U;
 };
 
-function For<T extends readonly unknown[], U extends JSX.Element>({ each, fallback, getKey, children }: ForProps<T, U>): ReactNode;
+function For<T extends readonly unknown[], U extends ReactElement>({ each, fallback, getKey, children }: ForProps<T, U>): ReactNode;
 ```
 
 An easy way to iterate over a list of items.
