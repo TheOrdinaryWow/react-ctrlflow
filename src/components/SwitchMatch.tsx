@@ -26,7 +26,7 @@ type MatchProps<T> = {
   /**
    * The content to render if the `when` prop is truthy. Can be a ReactNode or a function that returns a ReactNode.
    */
-  children: ReactNode | ((item: T) => ReactNode);
+  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
 };
 
 type FallbackProps = {
@@ -110,14 +110,20 @@ export function Match<T>({
 }: MatchProps<T> & { __ignoreContext?: boolean }): ReactNode | null {
   if (__ignoreContext || when) {
     if (typeof children === "function") {
-      const renderFn = children as (item: T) => ReactNode;
+      const renderFn = children as (item: NonNullable<T>) => ReactNode;
 
-      if (keyed && when) {
-        const key = typeof when === "object" && when !== null ? JSON.stringify(when) : String(when);
-        return <Fragment key={key}>{renderFn(when as T)}</Fragment>;
+      if (when) {
+        const value = when as NonNullable<T>;
+
+        if (keyed) {
+          const key = typeof value === "object" && value !== null ? JSON.stringify(value) : String(value);
+          return <Fragment key={key}>{renderFn(value)}</Fragment>;
+        }
+
+        return renderFn(value);
       }
 
-      return <>{when ? renderFn(when as T) : null}</>;
+      return null;
     }
 
     return children;

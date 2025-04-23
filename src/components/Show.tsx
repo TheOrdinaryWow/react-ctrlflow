@@ -45,20 +45,20 @@ type ShowProps<T> = {
  * ```
  */
 export function Show<T>({ when, keyed = false, fallback, children }: ShowProps<T>): ReactNode {
-  if (when) {
-    if (typeof children === "function") {
-      const childrenFn = children as (item: T) => ReactNode;
+  if (!when) return fallback || null;
 
-      if (keyed) {
-        const key = typeof when === "object" && when !== null ? JSON.stringify(when) : String(when);
-        return <Fragment key={key}>{childrenFn(when as T)}</Fragment>;
-      }
+  const value = when as NonNullable<T>;
 
-      return childrenFn(when as T);
+  if (typeof children === "function") {
+    const childrenFn = children as (item: NonNullable<T>) => ReactNode;
+
+    if (keyed) {
+      const key = typeof value === "object" && value !== null ? JSON.stringify(value) : String(value);
+      return <Fragment key={key}>{childrenFn(value)}</Fragment>;
     }
 
-    return children;
+    return childrenFn(value);
   }
 
-  return fallback || null;
+  return children;
 }
